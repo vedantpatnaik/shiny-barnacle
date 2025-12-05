@@ -70,13 +70,6 @@ const Translate = () => {
           )}
         </div>
       </form>
-
-      <Card title="Design Notes" subtle>
-        <p className="text-white/70">
-          Outputs stay compact to encourage study. Glosses and cues are intentionally short and direct—no fluff—to make
-          the bilingual mapping teachable.
-        </p>
-      </Card>
     </div>
   );
 };

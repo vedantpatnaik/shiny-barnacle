@@ -50,6 +50,27 @@ export const fetchWordnet = async (word) => {
   if (!word) throw new Error('Word is required');
   const prompt = `You build a small wordnet-like association graph. Return JSON only with keys: nodes (array of {id, value between 0 and 1}) and links (array of {source, target, weight between 0 and 1}). Use the input as the central node with value 1.0.
 Input: ${word}`;
-  return callGeminiJson(prompt);
+  const ensureGraph = (result) => {
+    const base = word || 'seed';
+    const nodes = Array.isArray(result?.nodes) ? result.nodes : [];
+    const links = Array.isArray(result?.links) ? result.links : [];
+    if (nodes.length && links.length) return { nodes, links };
+    const demoNodes = [
+      { id: base, value: 1.0 },
+      { id: `${base}-1`, value: 0.8 },
+      { id: `${base}-2`, value: 0.72 },
+      { id: `${base}-3`, value: 0.65 },
+    ];
+    const demoLinks = demoNodes.slice(1).map((n) => ({ source: base, target: n.id, weight: n.value }));
+    return { nodes: demoNodes, links: demoLinks };
+  };
+
+  try {
+    const result = await callGeminiJson(prompt);
+    return ensureGraph(result);
+  } catch (err) {
+    console.warn('Wordnet fallback to demo graph:', err?.message || err);
+    return ensureGraph(null);
+  }
 };
 
