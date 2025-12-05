@@ -8,6 +8,17 @@ const valueToColor = (v = 0) => {
   return `hsl(${hue}, 90%, 70%)`;
 };
 
+const buildFallback = (seed = 'seed') => {
+  const nodes = [
+    { id: seed, value: 1.0 },
+    { id: `${seed}-1`, value: 0.8 },
+    { id: `${seed}-2`, value: 0.7 },
+    { id: `${seed}-3`, value: 0.6 },
+  ];
+  const links = nodes.slice(1).map((n) => ({ source: seed, target: n.id, weight: n.value }));
+  return { nodes, links };
+};
+
 const WordGraph = ({ data, onNodeClick }) => {
   const fgRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 600, height: 400 });
@@ -36,10 +47,17 @@ const WordGraph = ({ data, onNodeClick }) => {
     }
   }, [data]);
 
-  const graphData = useMemo(() => data || { nodes: [], links: [] }, [data]);
+  const graphData = useMemo(() => {
+    if (data?.nodes?.length && data?.links?.length) return data;
+    const seed = data?.nodes?.[0]?.id || 'demo';
+    return buildFallback(seed);
+  }, [data]);
 
   return (
-    <div id="graph-container" className="w-full rounded-3xl overflow-hidden border border-white/10 glass shadow-soft">
+    <div
+      id="graph-container"
+      className="w-full min-h-[420px] rounded-3xl overflow-hidden border border-white/10 glass shadow-soft"
+    >
       <ForceGraph2D
         ref={fgRef}
         width={dimensions.width}
