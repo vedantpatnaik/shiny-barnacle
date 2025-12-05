@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import ForceGraph2D from 'react-force-graph-2d';
 
 const valueToColor = (v = 0) => {
   const clamped = Math.max(0, Math.min(1, v));
@@ -17,6 +16,78 @@ const buildFallback = (seed = 'seed') => {
   ];
   const links = nodes.slice(1).map((n) => ({ source: seed, target: n.id, weight: n.value }));
   return { nodes, links };
+};
+
+const SimpleGraph = ({ graphData, width, height, onNodeClick }) => {
+  const nodes = graphData.nodes || [];
+  const links = graphData.links || [];
+  if (!nodes.length) return null;
+
+  const centerX = width / 2;
+  const centerY = height / 2;
+  const radius = Math.max(Math.min(width, height) / 2 - 60, 120);
+
+  const positioned = nodes.map((n, idx) => {
+    if (idx === 0) return { ...n, x: centerX, y: centerY };
+    const angle = (idx - 1) * ((2 * Math.PI) / Math.max(nodes.length - 1, 1));
+    return {
+      ...n,
+      x: centerX + radius * Math.cos(angle),
+      y: centerY + radius * Math.sin(angle),
+    };
+  });
+
+  const nodeMap = Object.fromEntries(positioned.map((n) => [n.id, n]));
+
+  return (
+    <svg width={width} height={height} className="block">
+      <defs>
+        <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="rgba(255,255,255,0.9)" />
+          <stop offset="100%" stopColor="rgba(255,255,255,0.0)" />
+        </radialGradient>
+      </defs>
+      <rect width={width} height={height} fill="rgba(12,18,32,0.9)" />
+      {links.map((l, i) => {
+        const s = nodeMap[l.source];
+        const t = nodeMap[l.target];
+        if (!s || !t) return null;
+        return (
+          <line
+            key={`l-${i}`}
+            x1={s.x}
+            y1={s.y}
+            x2={t.x}
+            y2={t.y}
+            stroke="rgba(255,255,255,0.25)"
+            strokeWidth={Math.max(1, (l.weight || 0.5) * 3)}
+          />
+        );
+      })}
+      {positioned.map((n) => {
+        const r = 12 + (n.value || 0.5) * 12;
+        return (
+          <g
+            key={n.id}
+            onClick={() => onNodeClick?.(n)}
+            style={{ cursor: 'pointer', transition: 'transform 150ms ease' }}
+          >
+            <circle cx={n.x} cy={n.y} r={r} fill={valueToColor(n.value)} stroke="rgba(255,255,255,0.35)" />
+            <circle cx={n.x} cy={n.y} r={r * 1.6} fill="url(#nodeGlow)" opacity={0.2} />
+            <text
+              x={n.x}
+              y={n.y - r - 6}
+              textAnchor="middle"
+              fill="#e2e8f0"
+              style={{ fontSize: 12, fontFamily: 'Inter, sans-serif' }}
+            >
+              {n.id}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
 };
 
 const WordGraph = ({ data, onNodeClick }) => {
@@ -60,43 +131,7 @@ const WordGraph = ({ data, onNodeClick }) => {
       id="graph-container"
       className="w-full min-h-[420px] rounded-3xl overflow-hidden border border-white/10 glass shadow-soft"
     >
-      <ForceGraph2D
-        ref={fgRef}
-        width={dimensions.width}
-        height={dimensions.height}
-        graphData={graphData}
-        nodeLabel="id"
-        onNodeClick={onNodeClick}
-        backgroundColor="rgba(12,20,41,0.65)"
-        linkColor={() => 'rgba(255,255,255,0.18)'}
-        linkWidth={(link) => Math.max(1, (link.weight || 0.4) * 4)}
-        nodeVal={(node) => 6 + (node.value || 0.4) * 12}
-        nodeRelSize={6}
-        cooldownTicks={80}
-        enableNodeDrag={false}
-        nodeCanvasObject={(node, ctx, globalScale) => {
-          const label = node.id;
-          const fontSize = 12 / globalScale;
-          const radius = 10 + (node.value || 0.5) * 12;
-          ctx.beginPath();
-          const gradient = ctx.createRadialGradient(node.x, node.y, radius * 0.2, node.x, node.y, radius);
-          gradient.addColorStop(0, 'rgba(255,255,255,0.85)');
-          gradient.addColorStop(1, valueToColor(node.value));
-          ctx.fillStyle = gradient;
-          ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false);
-          ctx.fill();
-
-          ctx.strokeStyle = 'rgba(255,255,255,0.35)';
-          ctx.lineWidth = 1;
-          ctx.stroke();
-
-          ctx.font = `${fontSize}px Inter`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillStyle = '#f8fafc';
-          ctx.fillText(label, node.x, node.y - radius - fontSize);
-        }}
-      />
+      <SimpleGraph graphData={graphData} width={dimensions.width} height={dimensions.height} onNodeClick={onNodeClick} />
     </div>
   );
 };
