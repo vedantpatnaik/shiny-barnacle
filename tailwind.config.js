@@ -7,17 +7,17 @@ export default {
         sans: ['Inter', 'ui-sans-serif', 'system-ui'],
       },
       colors: {
-        night: '#0B1021',
-        mist: '#E7ECF4',
-        orchid: '#8F7CF9',
-        mint: '#6FF0C4',
-        slate: '#1B243A',
+        night: '#0F172A', // slate-900
+        mist: '#F1F5F9',
+        orchid: '#A855F7', // purple-500
+        mint: '#38BDF8', // sky-400 (replacing mint with sky blue)
+        slate: '#1E293B', // slate-800
       },
       boxShadow: {
-        soft: '0 18px 50px rgba(0,0,0,0.18)',
+        soft: '0 10px 40px -10px rgba(0,0,0,0.5)',
       },
       backgroundImage: {
-        glow: 'radial-gradient(circle at 20% 20%, rgba(143,124,249,0.35), transparent 30%), radial-gradient(circle at 80% 0%, rgba(111,240,196,0.35), transparent 25%), linear-gradient(135deg, #0B1021 0%, #11182C 40%, #0C1429 100%)',
+        glow: 'radial-gradient(circle at 15% 50%, rgba(168, 85, 247, 0.15), transparent 25%), radial-gradient(circle at 85% 30%, rgba(56, 189, 248, 0.15), transparent 25%)',
       },
     },
   },

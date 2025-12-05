@@ -3,8 +3,9 @@ import ForceGraph2D from 'react-force-graph-2d';
 
 const valueToColor = (v = 0) => {
   const clamped = Math.max(0, Math.min(1, v));
-  const hue = 180 + (1 - clamped) * 120; // mint to orchid
-  return `hsl(${hue}, 80%, 60%)`;
+  // Interpolate between Sky Blue (200) and Purple (270)
+  const hue = 200 + clamped * 70; 
+  return `hsl(${hue}, 90%, 70%)`;
 };
 
 const WordGraph = ({ data, onNodeClick }) => {
