@@ -14,9 +14,6 @@ const Navbar = () => {
     <header className="sticky top-0 z-30 backdrop-blur-xl bg-slate/40 border-b border-white/5">
       <div className="max-w-6xl mx-auto px-4 sm:px-8 md:px-12 lg:px-20 py-4 flex items-center justify-between">
         <Link to="/translate" className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-orchid to-mint flex items-center justify-center shadow-soft">
-            <span className="text-slate font-semibold">AI</span>
-          </div>
           <div className="flex flex-col leading-tight">
             <span className="font-semibold">Indigenous Intelligence</span>
             <span className="text-sm text-white/60">Translate · Learn · Graph</span>
