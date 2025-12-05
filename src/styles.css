@@ -15,18 +15,18 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: #0f172a;
+  background-color: #1b130f;
   background-image: radial-gradient(
-      circle at 15% 50%,
-      rgba(168, 85, 247, 0.25),
-      transparent 40%
+      circle at 20% 50%,
+      rgba(179, 107, 44, 0.22),
+      transparent 42%
     ),
     radial-gradient(
-      circle at 85% 30%,
-      rgba(56, 189, 248, 0.25),
-      transparent 40%
+      circle at 82% 35%,
+      rgba(217, 164, 65, 0.22),
+      transparent 42%
     );
-  color: #f8fafc;
+  color: #f8f3ec;
 }
 
 #root {

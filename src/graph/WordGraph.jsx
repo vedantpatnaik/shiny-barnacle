@@ -2,9 +2,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 const valueToColor = (v = 0) => {
   const clamped = Math.max(0, Math.min(1, v));
-  // Interpolate between Sky Blue (200) and Purple (270)
-  const hue = 200 + clamped * 70; 
-  return `hsl(${hue}, 90%, 70%)`;
+  const hue = 25 + clamped * 15; // warm brown -> amber
+  const sat = 70;
+  const light = 50 + clamped * 10;
+  return `hsl(${hue}, ${sat}%, ${light}%)`;
 };
 
 const buildFallback = (seed = 'seed') => {
