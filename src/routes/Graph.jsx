@@ -58,6 +58,11 @@ const Graph = () => {
             </p>
           </motion.div>
         )}
+        {(!data || !data.nodes?.length) && !loading && (
+          <div className="mt-4 text-white/60 text-sm">
+            Showing demo graph if API returns empty. Submit a word to refresh.
+          </div>
+        )}
       </Card>
     </div>
   );

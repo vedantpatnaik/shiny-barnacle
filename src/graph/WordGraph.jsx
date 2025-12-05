@@ -21,15 +21,17 @@ const buildFallback = (seed = 'seed') => {
 
 const WordGraph = ({ data, onNodeClick }) => {
   const fgRef = useRef(null);
-  const [dimensions, setDimensions] = useState({ width: 600, height: 400 });
+  const [dimensions, setDimensions] = useState({ width: 800, height: 500 });
 
   useEffect(() => {
     const updateDimensions = () => {
       const container = document.getElementById('graph-container');
       if (container) {
+        const width = Math.max(container.clientWidth || 0, 640);
+        const height = Math.max(420, window.innerHeight * 0.6);
         setDimensions({
-          width: container.clientWidth,
-          height: Math.max(400, window.innerHeight * 0.6),
+          width,
+          height,
         });
       }
     };
